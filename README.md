@@ -99,7 +99,7 @@ if not os.path.exists(directory_storage):
     print(f"Created directory: {directory_storage}")
 ```
 
-The "<ins> /Docker_Directory/Python_App_Using_Kubernetes/Storage/Data_Users.txt< /ins>" will be the path where the file "Data_Users.txt" will store data.
+The "<ins>/Docker_Directory/Python_App_Using_Kubernetes/Storage/Data_Users.txt</ins>" will be the path where the file "Data_Users.txt" will store data.
 
 <a name="view_data"></a>
 ### View_Data
