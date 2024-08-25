@@ -317,6 +317,7 @@ To do that, after the minikube installation, start the minikube with the followi
 ```
 minikube start
 ```
+
 If the start was successfull, you will able to see something like that:
 ![Alt text](Readme_Screen/kube_start_successfull.png)
 You can see that via Docker Hub too:
@@ -340,6 +341,7 @@ This explain is all up and running.
 ```
 kubectl cluster-info
 ```
+
 You will able to see:
 ![Alt text](Readme_Screen/cluster_info.png)
 This explain is all up and running.
@@ -350,6 +352,7 @@ To build the Docker image, you must use the following command:
 # We use the direectory " . ", 'cause when apply this command, we are int the same directory of Dockerfile.
 docker buil -t python_app_image .
 ```
+
 To view the list of image:
 ```
 docker image ls
@@ -368,9 +371,11 @@ To do that:
 ```
 docker tag python_app_image sirchesterking/kubernetes-app-python
 ```
+
 <b>Old Image</b>: python_app_image
 <b>New Image</b>: sirchesterking/kubernetes-app-python (name of public repository)
 <br>
+
 Before to push the image in the public repository, you must login via terminal to docker hub adn provide username and password:
 ```
 docker login
@@ -382,6 +387,7 @@ After that, you can push the image in the public repository, using the following
 # We provided the name:tag
 docker push sirchesterking/kubernetes-app-python:latest
 ```
+
 You will able to see via terminal:
 ![Alt text](Readme_Screen/push_terminal.png)
 
@@ -398,6 +404,7 @@ To deploy the <strong>Deployment Object</strong> in the Kubernetes Cluster, you 
 # After the -f option, you must provide the name of the Deployment.yaml file.
 kubectl apply -f kubernetes_deployment.yaml
 ```
+
 You will able to see via terminal:
 ![Alt text](Readme_Screen/deploy_create_terminal.png)
 
