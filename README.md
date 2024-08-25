@@ -327,7 +327,7 @@ To verify the integrity of the local cluster, you have two ways:
 - Minikube command
 - Kubectl command
 
-I) Using the minikube command, you must use:
+2.1) Using the minikube command, you must use:
 ```
 minikube status
 ```
@@ -335,13 +335,143 @@ You will able to see:
 ![Alt text](Readme_Screen/minikube_status.png)
 This explain is all up and running.
 
-II) Using Kubectl command, you must use:
+2.2) Using Kubectl command, you must use:
 ```
 kubectl cluster-info
 ```
 You will able to see:
 ![Alt text](Readme_Screen/cluster_info.png)
 This explain is all up and running.
+
+3) Build the Docker Image
+To build the Docker image, you must use the following command:
+```
+# We use the direectory " . ", 'cause when apply this command, we are int the same directory of Dockerfile.
+docker buil -t python_app_image .
+```
+To view the list of image:
+```
+docker image ls
+```
+
+4) Push the Docker image to a public repository
+To use the image for our pods in the Cluster, we must use a public repository to pull the image and use it in the container's pods.<br>
+In this case, we use the public repository on [Docker Hub](https://hub.docker.com).<br>
+To pull the image, we need an accessible reporitory, so make sure to create a <b>public repository</b>.<br>
+<br>
+To push the image created in the previously steps, we must rename the image into the Public Repository.<br>
+My repository is:
+![Alt text](Readme_Screen/public_repo.png)
+So we must rename the image as the name of public repository.<br>
+To do that:
+```
+docker tag python_app_image sirchesterking/kubernetes-app-python
+```
+<b>Old Image</b>: python_app_image
+<b>New Image</b>: sirchesterking/kubernetes-app-python (name of public repository)
+<br>
+Before to push the image in the public repository, you must login via terminal to docker hub adn provide username and password:
+```
+docker login
+```
+<br>
+
+After that, you can push the image in the public repository, using the following command:
+```
+# We provided the name:tag
+docker push sirchesterking/kubernetes-app-python:latest
+```
+You will able to see via terminal:
+![Alt text](Readme_Screen/push_terminal.png)
+
+And you will able to via in the Public Repository of Docker Hub:
+![Alt text](Readme_Screen/push_public_repo.png)
+
+
+5) Deploy the Kubernetes Deployment
+After the push of the image in the public repository, you can deploy the Kubernetes Deployment Object.<br>
+To do that, you must create, before, the Deployment.yaml file, that will contain all the attributes and the specification of the desired behavior of the Deployment.
+To review all the components inside the Deployment.yaml file, you can view [here](https://github.com/Sir-Chester-King/Python_App_Using_Kubernetes/blob/main/kubernetes_deployment.yaml).<br>
+To deploy the <strong>Deployment Object</strong> in the Kubernetes Cluster, you must use:
+```
+# After the -f option, you must provide the name of the Deployment.yaml file.
+kubectl apply -f kubernetes_deployment.yaml
+```
+You will able to see via terminal:
+![Alt text](Readme_Screen/deploy_create_terminal.png)
+
+
+6) Deploy the Kubernetes Deployment
+To view the <b>Deployment</b>, you have two ways:
+- Kubectl command
+- Minikube Dashboard
+
+6.1) Kubectl command
+Using the Kubectl command, you must use:
+```
+kubectl get deployment
+```
+You will able to see via terminal:
+![Alt text](Readme_Screen/get_deploy_terminal.png)
+
+6.2) Minikube Dashboard
+To view the deployment via minikube, you can you the dashboard command, provided by minikube tool.<br>
+To check, you must use:
+```
+minikube dashboard
+```
+You will able to see via terminal:
+![Alt text](Readme_Screen/minikube_dashboard_terminal.png)
+
+And after that, you can check it via browser using the URL provided in the terminal:
+![Alt text](Readme_Screen/minikube_dashboard_browser.png)
+
+To view the <b>Pods</b> that are created automatically after the deployment (that's the power of the Kubernetes Orchestrator), you must use:
+```
+kubectl get pod
+```
+You will able to see via terminal:
+![Alt text](Readme_Screen/get_pod_terminal.png)
+
+7) Run the appllication
+After you did all the above steps, you can run the python application.<br>
+To run the app inside the pod, inside the Kubernetes cluster, you must execute some commands via terminal:
+```
+kubectl get pod
+```
+To get the pod's name that you will use to run the python application.<br>
+After:
+```
+kubectl exec -it <pod-name> -- /bin/bash
+```
+Where:
+- <pod-name>: Replace this with the actual name of your pod.
+- it: Combines the -i and -t flags to make the session interactive, like a terminal.
+- /bin/bash: Starts a Bash shell. If your container uses a different shell (like sh), you can replace /bin/bash with that.
+
+You will able to see via terminal:
+![Alt text](Readme_Screen/bash_container_tree.png)
+
+As you can see, you now have access to a container inside the Pod.<br>
+![Alt text](Readme_Screen/list_container_tree.png)
+
+So now, you can run the python application:
+```
+python Main_Code/main.py
+```
+![Alt text](Readme_Screen/run_app_container.png)
+![Alt text](Readme_Screen/list_users_container.png)
+
+If you have a multiple conatiner in the same Pod (because a Pod is a VM that can contain multiple containers), you must use:
+```
+kubectl exec -it <pod-name> -c <container-name> -- /bin/bash
+```
+To list the containers inside the Pod, you must use:
+```
+kubectl describe pod <pod-name>
+```
+In the output, look for a section like this:
+![Alt text](Readme_Screen/container_pod_describe.png)
 
 
 ---
