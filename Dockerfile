@@ -6,8 +6,6 @@ LABEL authors = "Nicola Ricciardi"
 WORKDIR /Docker_Directory
 COPY . .
 
-# This command create a volume mapped to some folder on the Host machine (we don't know where)
-# VOLUME ["/Docker_Directory/Storage"]
 
 # Set the PYTHONPATH to include the "Docker_Directory" directory
 ENV PYTHONPATH "${PYTHONPATH}:/Docker_Directory"

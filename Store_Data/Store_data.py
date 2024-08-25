@@ -21,6 +21,7 @@ def Store_Data_Into_Volume(user):
     # Name of the file will contain the user's data.
     file_name = "Data_Users.txt"
 
+    # Path of the txt file where the user's data will stored
     file_path = os.path.join(directory_storage, file_name)
 
     if not os.path.exists(directory_storage):

@@ -16,7 +16,6 @@ def clean_console():
 
 
 def main():
-    clean_console()
     menu_app = {
         "1": "Create new user",
         "2": "View list users"
