@@ -1,4 +1,4 @@
-# Python Application Using <ins>**Kubernetes*</ins>
+# Python Application Using <ins>**Kubernetes Cluster**</ins>
 
 ## Table Of Contents
 
@@ -9,24 +9,28 @@
 * [Dockerfile](#dockerfile)
     - [Command Dockerfile](#command_file)
     - [Build Docker Image](#build_image)
-    - [Create Docker Volume](#create_volume)
-    - [Run Docker Container](#run_container)
-* [View Data In The Docker Volume](#view_data_volume)
+* [Kubernetes Cluster](#kube_cluster)
+    - [Kubernetes Components](#kube_components)
+    - [Kubernetes API Server](#kube_api)
+    - [Kubernetes Objects](#kube_objects)
+    - [Kubectl](#kube_kubectl)
+    - [Minikube - Local Kubernetes Cluster Instance](#minikube)
+* [Run Python Application In A Pod](#run_python_app_pod)
 
 ---
 <a name="description"></a>
 
 ## Description
 
-This application allow to user to store into a file saome User's data info, such as Name, Surname, Address and Phone
-Number and to view the data stored.<br>
-The storing of data's are set in a file, and this file, will be stored into
-a <strong>[Docker Volumes](https://docs.docker.com/engine/storage/volumes)</strong> (<ins>NOT</ins> into some project's
-folder).<br>
-The purpose of this app is to understand how the <em>data persist</em>, even when the container it's restarted or
-removed; of course the Volume used is a <mark>Persistent Volume</mark>, not a Unknow Volume (temporary volume).<br>
+This application allow to user to store into a file saome User's data info, such as Name, Surname, Address and Phone Number; and view the data stored too.<br>
+The storing of data's are set in a file, and this file, will be stored into a project's directory <em>Storage Directory</em>. <br>
+The purpose of this app is to understand how to deploy and run a container inside a <mark>Pod</mark>.<br>
 The application works via Terminal bash, not GUI.<br>
-Application is write in [Python](https://www.python.org).<br>
+Application is structured as:
+* Language: [Python](https://www.python.org)
+* Container Engine: [Docker](https://www.docker.com)
+* Orchestrator: [Kubernetes](https://kubernetes.io)
+
 The Tree of application is:
 
 - **`Project_Pythony/`**: The root directory of the project.
@@ -34,10 +38,11 @@ The Tree of application is:
 - **`Classes/`**: Includes additional modules used by the main application.
 - **`View_Users/`**: Manages user view list functionality.
 - **`Store_Data/`**: Handles data storage operations.
+- **`Storage/`**: Directory which are stored the user's data.
 - **`Create_Users/`**: Manages user creation functionality.
 - **`Dockerfile`**: Defines the Docker container setup for the project.
+- **`kubernetes_deployment.yaml`**: Define the Kubernetes Cluster setup for the pods.
 - **`README.md`**: Documentation for the project.
-
   
 ---
 <a name="main_app"></a>
@@ -73,43 +78,74 @@ match option_chosen:
 
 ### Store_Data
 
-This function is structured for storing the data of new users into the file in the <mark>Docker Volume
-Directory</mark>.<br>
-Initally it created the path of Docker Volume where the data will be stored (the path is harded code inside the code).
+This function is structured for storing the data of new users into the file in a project's directory <em>"Storage"</em> dir.
+It defined where the data will be stored (the path is harded code inside the code).
 
 ```
-# This is the PATH inside the Docker Container Volume
-path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
+# This is the PATH inside the Project Directory (current directory)
+# -> Python_App_Using_Kubernetes/Store_Data/Store_data.py
+absolutepath = os.path.abspath(__file__)
 
-# Check if the directory inside the volume exist or not.
+# Go up one level -> Python_App_Using_Kubernetes/Store_Data
+one_level_up = os.path.dirname(absolutepath)
+
+# Go up two levels -> Python_App_Using_Kubernetes
+two_level_up = os.path.dirname(one_level_up)
+
+# Check if the directory inside the project exist or not.
 # In case it doesn't exist, it is created.
-directory = os.path.dirname(path_volume_docker)
-if not os.path.exists(directory):
-    os.makedirs(directory)
-    print(f"Created directory: {directory}")
+directory_storage = os.path.join(two_level_up, "Storage")
+
+# Name of the file will contain the user's data.
+file_name = "Data_Users.txt"
+
+# Path of the txt file where the user's data will stored
+file_path = os.path.join(directory_storage, file_name)
+
+if not os.path.exists(directory_storage):
+    os.makedirs(directory_storage)
+    print(f"Created directory: {directory_storage}")
 ```
 
-The "<ins> /Docker_Directory/Storage/User_Data.txt< /ins>" will be the path inside the Docker Volume where the file "
-User_Data.txt" will store data.
+The "<ins> /Docker_Directory/Python_App_Using_Kubernetes/Storage/Data_Users.txt< /ins>" will be the path where the file "Data_Users.txt" will store data.
 
 <a name="view_data"></a>
 
 ### View_Data
 
-Thsi function is used to view all the users are stored inside the Docker Volume file (
-/Docker_Directory/Storage/User_Data.txt).<br>
-It be defined the path of Docker Volume where the data has been stored (the path is harded code inside the code).
-Thsi function use a nested <mark>FOR cycle</mark> to iterate first one, the questions dictionary (to show one question
-per time), and the second one, the answer (to show all possible answer per question).
+Thsi function is used to view all the users are stored inside (/Docker_Directory/Python_App_Using_Kubernetes//Storage/User_Data.txt).<br>
+It be defined the path of directory where the data has been stored (the path is harded code inside the code).
 
 ```
-# This is the PATH inside the Docker Container Volume
-path_volume_docker = "/Docker_Directory/Storage/User_Data.txt"
+# This is the PATH inside the Project Directory (current directory)
+# -> Python_App_Using_Kubernetes/Store_Data/Store_data.py
+absolutepath = os.path.abspath(__file__)
 
-# Check if the directory inside the volume exist or not.
-directory = os.path.dirname(path_volume_docker)
-if not os.path.exists(directory):
-    print(f"The directory {directory} was not found")
+# Go up one level -> Python_App_Using_Kubernetes/Store_Data
+one_level_up = os.path.dirname(absolutepath)
+
+# Go up two levels -> Python_App_Using_Kubernetes
+two_level_up = os.path.dirname(one_level_up)
+
+# Check if the directory inside the project exist or not.
+# In case it doesn't exist, it is created.
+directory_storage = os.path.join(two_level_up, "Storage")
+
+# Name of the file will contain the user's data.
+file_name = "Data_Users.txt"
+
+# Path of the txt file where the user's data will stored
+file_path = os.path.join(directory_storage, file_name)
+
+if not os.path.exists(directory_storage):
+    print(f"The directory {directory_storage} was not found")
+```
+
+```
+with open(file_path, 'r') as storage_file:
+    content = storage_file.read()
+    print("List Users:", end="\n")
+    print(content)
 ```
 
 ---
@@ -118,8 +154,7 @@ if not os.path.exists(directory):
 ## Dockerfile
 
 This file contain all commands used to build the Image that Containers will use.<br>
-The Image is a snapshot of the source code, and when it did build, the Image is in read-only mode, and you cannot change
-the code. If you want to create a container based to the new image, you must re-build the image.
+The Image is a snapshot of the source code, and when it did build, the Image is in read-only mode, and you cannot change the code. If you want to create a container based to the new image, you must re-build the image.
 
 --
 <a name="command_file"></a>
@@ -201,10 +236,9 @@ It be the result.<br>
 
 ```
 # If you ware in the same directory (as path) of where Dockerfile is stored, you can pass it as " . " argument.
-docker build -t python_app_image:1 .
+docker build -t python_app_image .
 ```
 
-![Alt text](Readme_Screen/State_build.png)
 <br>
 To view the image was builted, you can view with the following command:
 
@@ -212,90 +246,81 @@ To view the image was builted, you can view with the following command:
 docker image ls
 ```
 
-or via Docker Desktop app:
-![Alt text](Readme_Screen/Docker_Hub_Image.png)
+---
+<a name="kube_cluster"></a>
+## Kubernetes Cluster
+[Kubernetes](https://kubernetes.io), also known as K8s, is an open source system for automating deployment, scaling, and management of containerized applications.<br>
+A Kubernetes cluster consists of a control plane plus a set of worker machines, called nodes, that run containerized applications.<br>
+Every cluster needs at least one worker node in order to run Pods.<br>
+
+The worker node(s) host the Pods that are the components of the application workload. The control plane manages the worker nodes and the Pods in the cluster.<br>
+In production environments, the control plane usually runs across multiple computers and a cluster usually runs multiple nodes, providing fault-tolerance and high availability.
+
+For more details: [Cluster Architecture](https://kubernetes.io/docs/concepts/architecture/)
 
 --
-<a name="create_volume"></a>
+<a name="kube_components"></a>
+### Kubernetes Components
+A Kubernetes cluster consists of a control plane and one or more worker nodes.<br>
+Here's a brief overview of the main components in the <mark>Control Plane</mark>:
+- kube-apiserver: The core component server that exposes the Kubernetes HTTP API.
+- etcd: Consistent and highly-available key value store for all API server data.
+- kube-scheduler: Looks for Pods not yet bound to a node, and assigns each Pod to a suitable node.
+- kube-controller-manager: Runs controllers to implement Kubernetes API behavior.
 
-### Create The Docker Volume
+Here's a brief overview of the main components in the <mark>Node Plane</mark>:
+- kubelet: Ensures that Pods are running, including their containers.
+  
+<img src="https://kubernetes.io/images/docs/components-of-kubernetes.svg&text_color=ffffff">
 
-After you successfully build the Image, you can create the Docker Volume that it will be used to store data.<br>
-To create the <mark>Persisten Volume</mark>, you must use the following command:
+For more detail: [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/)
 
-```
-docker volume Volume_Python_App
-```
+---
+<a name="kube_api"></a>
+## Kubernetes Server API
+The core of Kubernetes' control plane is the API server. The API server exposes an HTTP API that lets end users, different parts of your cluster, and external components communicate with one another.<br>
+Most operations can be performed through the kubectl command-line interface or other command-line tools, such as kubeadm, which in turn use the API.<br>
+However, you can also access the API directly using REST calls.<br>
+Kubernetes provides a set of client libraries for those looking to write applications using the Kubernetes API.<br>
 
-To view the Volume created, you can see it with the:
-
-```
-docker volume ls
-```
-
-![Alt text](Readme_Screen/List_volume_terminal.png)
-
-or via Docker Desktop app:
-![Alt text](Readme_Screen/List_volume_docker_hub.png)
-<br>
+For more detail: [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/)
 
 --
-<a name="run_container"></a>
+<a name="kube_objects"></a>
+## Kubernetes Objects
+Kubernetes objects are persistent entities in the Kubernetes system.<br> 
+Kubernetes uses these entities to represent the state of your cluster.<br>
+Specifically, they can describe:
+- What containerized applications are running (and on which nodes)
+- The resources available to those applications
+- The policies around how those applications behave, such as restart policies, upgrades, and fault-tolerance
 
-### Run Docker Container
+For more detail: [Kubernetes Objects](https://kubernetes.io/docs/concepts/overview/working-with-objects/)
 
-After you successfully build the Image and created the Docker Volume, you can create and run the Container will contain
-the python app.<br>
-To crate the container, you must use the following command:
+--
+<a name="kube_kubectl"></a>
+## Kubectl
+Kubernetes provides a command line tool for communicating with a Kubernetes cluster's control plane, using the Kubernetes API.<br>
+This tool is <mark><ins>Kubectl</ins></mark>.<br>
+For installation instructions, see [Installing kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl); for a quick guide, see the cheat sheet.<br>
 
-```
-docker run --name container_python_app  -ti --rm -v Volume_Python_App:/Docker_Directory/Storage python_app_image:1
-```
+For more detail: [Kubectl](https://kubernetes.io/docs/reference/kubectl/)
 
-- --name: specify the Container name.
-- -ti: specify the Container will be in <em>interactive</em> mode.
-- -rm; specify that the Container will be automatically removed whene the execution of the application will terminate.
-- -v Volume_Python_App:/Docker_Directory/Storage: specify to mount the Volume with name Volume_Python_App, in the
-  /Docker_Directory/Storage (this path is used to store data).
-- python_app_image:1: specify the name of Image that will be used to create the Container.
 
-When you create the container, the app start immediatly, 'cause, in the Dockerfile we declared a CMD command the run
-the "main.py" file.<br>
-![Alt text](Readme_Screen/Start_app.png)
-If you wanna see the list of container created, you must use the following command:
-
-```
-docker ps
-```
-
-If you wanna see the list of container that no longer used, for example, such as it was terminated 'cause the app in the
-container finished the work.<br>
-You must use the following command:
-
-```
-docker ps -a
-```
+--
+<a name="minikube"></a>
+## Minikube - Local Kubernetes Cluster Instance
+Minikube is a tool that lets you run Kubernetes locally.<br>
+Minikube runs an all-in-one or a multi-node local Kubernetes cluster on your personal computer (including Windows, macOS and Linux PCs) so that you can try out Kubernetes, or for daily development work.
+To install Minikube you can follow the official guide: [Get Start](https://minikube.sigs.k8s.io/docs/start/)<br>
+For more detail: [Minikube](https://minikube.sigs.k8s.io/docs/)<br><br>
+After installation of Minikube, to start a local Kubernetes Cluster, follow the official guide: [Start Cluster](https://kubernetes.io/docs/tutorials/hello-minikube/)
 
 ---
-<a name="view_data_volume"></a>
-
-## View Data In The Docker Volume
-
-To view the data after it be stored in the Volume, you can view with 2 mode:
-
-- Using a function of the application (if specified)
-- Using Docker Desktop app
-
-With the function of app:
-![Alt text](Readme_Screen/Option_view_Data.png)
-![Alt text](Readme_Screen/View_Data_Volume_Func_App.png)
-
-With the Docker Desktop app:
-![Alt text](Readme_Screen/Volume_Data_Docker_Hub.png)
-![Alt text](Readme_Screen/View_Data_Volume_Docker_Hub.png)
+<a name="run_python_app_pod"></a>
+### Run Python Application In A Pod
 
 ---
-
 ## Author
 
 - <ins><b>Nicola Ricciardi</b></ins>
