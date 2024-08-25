@@ -364,9 +364,13 @@ In this case, we use the public repository on [Docker Hub](https://hub.docker.co
 To pull the image, we need an accessible reporitory, so make sure to create a <b>public repository</b>.<br>
 <br>
 To push the image created in the previously steps, we must rename the image into the Public Repository.<br>
+
 My repository is:
+
 ![Alt text](Readme_Screen/public_repo.png)
+
 So we must rename the image as the name of public repository.<br>
+
 To do that:
 ```
 docker tag python_app_image sirchesterking/kubernetes-app-python
@@ -453,7 +457,7 @@ After:
 kubectl exec -it <pod-name> -- /bin/bash
 ```
 Where:
-- <pod-name>: Replace this with the actual name of your pod.
+- pod-name: Replace this with the actual name of your pod.
 - it: Combines the -i and -t flags to make the session interactive, like a terminal.
 - /bin/bash: Starts a Bash shell. If your container uses a different shell (like sh), you can replace /bin/bash with that.
 
