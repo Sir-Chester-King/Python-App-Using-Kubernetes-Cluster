@@ -1,7 +1,6 @@
 # Python Application Using <ins>**Kubernetes Cluster**</ins>
 
 ## Table Of Contents
-
 * [Description](#description)
 * [Main Application](#main_app)
     - [Store_Data](#store_data)
@@ -19,9 +18,7 @@
 
 ---
 <a name="description"></a>
-
 ## Description
-
 This application allow to user to store into a file saome User's data info, such as Name, Surname, Address and Phone Number; and view the data stored too.<br>
 The storing of data's are set in a file, and this file, will be stored into a project's directory <em>Storage Directory</em>. <br>
 The purpose of this app is to understand how to deploy and run a container inside a <mark>Pod</mark>.<br>
@@ -32,7 +29,6 @@ Application is structured as:
 * Orchestrator: [Kubernetes](https://kubernetes.io)
 
 The Tree of application is:
-
 - **`Project_Pythony/`**: The root directory of the project.
 - **`Main_Code/`**: Contains the main application logic.
 - **`Classes/`**: Includes additional modules used by the main application.
@@ -46,9 +42,7 @@ The Tree of application is:
   
 ---
 <a name="main_app"></a>
-
 ## Main Application
-
 The application in the main page, show to user a menu list to create a new user, or view the list of all users.<br>
 The input is via Terminal command.
 
@@ -75,9 +69,7 @@ match option_chosen:
 ```
 
 <a name="store_data"></a>
-
 ### Store_Data
-
 This function is structured for storing the data of new users into the file in a project's directory <em>"Storage"</em> dir.
 It defined where the data will be stored (the path is harded code inside the code).
 
@@ -110,9 +102,7 @@ if not os.path.exists(directory_storage):
 The "<ins> /Docker_Directory/Python_App_Using_Kubernetes/Storage/Data_Users.txt< /ins>" will be the path where the file "Data_Users.txt" will store data.
 
 <a name="view_data"></a>
-
 ### View_Data
-
 Thsi function is used to view all the users are stored inside (/Docker_Directory/Python_App_Using_Kubernetes//Storage/User_Data.txt).<br>
 It be defined the path of directory where the data has been stored (the path is harded code inside the code).
 
@@ -150,21 +140,16 @@ with open(file_path, 'r') as storage_file:
 
 ---
 <a name="dockerfile"></a>
-
 ## Dockerfile
-
 This file contain all commands used to build the Image that Containers will use.<br>
 The Image is a snapshot of the source code, and when it did build, the Image is in read-only mode, and you cannot change the code. If you want to create a container based to the new image, you must re-build the image.
 
 --
 <a name="command_file"></a>
-
 ### Command Dockerfile
-
 The commands used to build the image that it'll be used to create the container that has the code, you must declare some
 parameters.<br>
 In this image it used the following commands:
-
 - FROM
 - LABEL
 - WORKDIR
@@ -227,9 +212,7 @@ CMD ["python", "./Main_Code/main.py"]
 
 --
 <a name="build_image"></a>
-
 ### Build Docker Image
-
 To build image, you must use the <strong> BUILD </strong> command, and pass where the dockerfile is stored, as a
 parameter.<br>
 It be the result.<br>
@@ -271,7 +254,7 @@ Here's a brief overview of the main components in the <mark>Control Plane</mark>
 Here's a brief overview of the main components in the <mark>Node Plane</mark>:
 - kubelet: Ensures that Pods are running, including their containers.
   
-<img src="https://kubernetes.io/images/docs/components-of-kubernetes.svg&text_color=ffffff">
+<img src="https://kubernetes.io/images/docs/components-of-kubernetes.svg">
 
 For more detail: [Kubernetes Components](https://kubernetes.io/docs/concepts/overview/components/)
 
@@ -319,6 +302,47 @@ After installation of Minikube, to start a local Kubernetes Cluster, follow the 
 ---
 <a name="run_python_app_pod"></a>
 ### Run Python Application In A Pod
+To run the python app, we need execute some steps before to do it.
+- Run Minikube - Local Kubernetes Cluster Instance
+- Verify the status of local Cluster
+- Build the Docker image
+- Push the Docker image to a public repository
+- Deploy the Kubernetes Deployment
+- Verify the status of deployments and pods
+- Run the appllication
+
+1) Run Minikube - Local Kubernetes Cluster Instance
+Before run the application, we need to start our local Kubernetes Cluster.<br>
+To do that, after the minikube installation, start the minikube with the following command:
+```
+minikube start
+```
+If the start was successfull, you will able to see something like that:
+![Alt text](Readme_Screen/kube_start_successfull.png)
+You can see that via Docker Hub too:
+![Alt text](Readme_Screen/docker_hub_minikube.png)
+
+2) Verify the status of local Cluster
+To verify the integrity of the local cluster, you have two ways:
+- Minikube command
+- Kubectl command
+
+I) Using the minikube command, you must use:
+```
+minikube status
+```
+You will able to see:
+![Alt text](Readme_Screen/minikube_status.png)
+This explain is all up and running.
+
+II) Using Kubectl command, you must use:
+```
+kubectl cluster-info
+```
+You will able to see:
+![Alt text](Readme_Screen/cluster_info.png)
+This explain is all up and running.
+
 
 ---
 ## Author
