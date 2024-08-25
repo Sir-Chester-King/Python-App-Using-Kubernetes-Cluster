@@ -1,1 +1,4 @@
 apiVersion: apps/v1
+
+# Type of object we want to deploy in the Kubernetes Cluster
+kind: Deployment
