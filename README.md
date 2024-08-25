@@ -37,7 +37,7 @@ The Tree of application is:
 - **`Storage/`**: Directory which are stored the user's data.
 - **`Create_Users/`**: Manages user creation functionality.
 - **`Dockerfile`**: Defines the Docker container setup for the project.
-- **`kubernetes_deployment.yaml`**: Define the Kubernetes Cluster setup for the pods.
+- **`Kubernetes_Deployment.yaml`**: Define the Kubernetes Cluster setup for the pods.
 - **`README.md`**: Documentation for the project.
   
 ---
