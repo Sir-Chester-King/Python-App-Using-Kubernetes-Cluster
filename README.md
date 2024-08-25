@@ -331,8 +331,9 @@ To verify the integrity of the local cluster, you have two ways:
 ```
 minikube status
 ```
-You will able to see:
+You will able to see:<br><br>
 ![Alt text](Readme_Screen/minikube_status.png)
+<br>
 This explain is all up and running.
 
 2.2) Using Kubectl command, you must use:
