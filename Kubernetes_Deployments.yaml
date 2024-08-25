@@ -22,10 +22,10 @@ spec:
 
   # Label selector for pods.
   # Selector is used to identify and manage the pods that belong to the deployment.
-  selector: 
+  selector:
 
     # This is the label selector. It specifies that the Deployment will manage pods defined with the label {key:value}
-    matchLabels: 
+    matchLabels:
       kubernetes-pod-label: kubernetes-pod-python-app-label
 
   # Describe the Pod which should be created (Pod is an object in the Kubernetes world).
