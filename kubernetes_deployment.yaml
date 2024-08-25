@@ -1,4 +1,51 @@
+# YAML MANIFEST
+
+# Specify the version of API.
+# You can use the Kubernetes API to read and write Kubernetes resource objects via a Kubernetes API endpoint.
+# APIVersion defines the versioned schema of this representation of an object.
 apiVersion: apps/v1
 
-# Type of object we want to deploy in the Kubernetes Cluster
+# Type of object we want to deploy in the Kubernetes Cluster.
 kind: Deployment
+
+# Standard object's metadata.
+metadata:
+
+  # Name of the deployment.
+  name: kubernetes-deployments-python-app
+
+# Specification of the desired behavior of the Deployment.
+spec:
+
+  # The "Replicas" are the "Pods" (Pods are a virtual machine that will contain the cointainer with the app inside the container).
+  replicas: 0
+
+  # Label selector for pods.
+  # Selector is used to identify and manage the pods that belong to the deployment.
+  selector: 
+
+    # This is the label selector. It specifies that the Deployment will manage pods defined with the label {key:value}
+    matchLabels: 
+      kubernetes-pod-label: kubernetes-pod-python-app-label
+
+  # Describe the Pod which should be created (Pod is an object in the Kubernetes world).
+  template:
+
+    # Standard object's metadata.
+    metadata:
+
+      # This defines the labels applied to the pods created by the Deployment. {key:value}
+      labels:
+        kubernetes-pod-label: kubernetes-pod-python-app-label
+    
+    # Specification of the desired behavior of the pod.
+    spec:
+
+      # List of containers belonging to the pod. 
+      # Containers cannot currently be added or removed. 
+      # There must be at least one container in a Pod. Cannot be updated.
+      containers:
+        - name: container-python-app-in-kube-cluster
+          image: sirchesterking/kubernetes-app-python
+        # - name: container_2...
+        # - image: image_repository_2...
