@@ -45,6 +45,8 @@ def main():
             return 0
 
 
-# Using the special variable __name__
+# __name__ is a special built-in variable that exists in every module (a module is simply a Python file).
+# __main__ is a string that Python assigns to the __name__ variable when the module is executed as the main program.
+# It serves as an entry point for the script execution.
 if __name__ == "__main__":
     main()
